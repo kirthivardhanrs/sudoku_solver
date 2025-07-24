@@ -12,12 +12,24 @@ sudoku = np.array(
     [[2, 8, 0], [0, 0, 5], [0, 7, 9]]]]
 )
 
-def check_valid(arr):
+def valid_set(arr):
     return len(arr) == len(set(arr)) and len(arr) == 9
 
-def col_check(puzzle, b, d):
-    print(puzzle[:, b, :, d].flatten())
+def checks(puzzle, a, b, c, d):
+    col_check = valid_set(puzzle[:, b, :, d].flatten())
+    row_check = valid_set(puzzle[a, :, c, :].flatten())
+    grid3x3_check = valid_set(puzzle[a, b, :, :].flatten())
+
+    return [col_check, row_check, grid3x3_check]
+
+coords = [] # append([a,b,c,d])
     
-col_check(sudoku, 0, 0)
+for a in range(3):
+    for b in range(3):
+        for c in range(3):
+            for d in range(3):
+                if not sudoku[a,b,c,d]:
+                    pass
+
 
 #sudoku[a,b,c,d] = ath row of big 3x3, bth col of big 3x3, cth row of selected small 3x3, infer for d
