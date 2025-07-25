@@ -1,21 +1,12 @@
 import numpy as np
 import csv
+import sys
+
+sys.setrecursionlimit(4000)
 
 sudoku = np.array(
     [[[[5, 3, 0], [6, 0, 0], [0, 9, 8]],
     [[0, 7, 0], [1, 9, 5], [0, 0, 0]],
-    [[0, 0, 0], [0, 0, 0], [0, 6, 0]]],
-    [[[8, 0, 0], [4, 0, 0], [7, 0, 0]],
-    [[0, 6, 0], [8, 0, 3], [0, 2, 0]],
-    [[0, 0, 3], [0, 0, 1], [0, 0, 6]]],
-    [[[0, 6, 0], [0, 0, 0], [0, 0, 0]],
-    [[0, 0, 0], [4, 1, 9], [0, 8, 0]],
-    [[2, 8, 0], [0, 0, 5], [0, 7, 9]]]]
-)
-
-sudoku = np.array(
-    [[[[5, 3, 4], [6, 7, 2], [1, 9, 8]],
-    [[6, 7, 8], [1, 9, 5], [3, 4, 2]],
     [[0, 0, 0], [0, 0, 0], [0, 6, 0]]],
     [[[8, 0, 0], [4, 0, 0], [7, 0, 0]],
     [[0, 6, 0], [8, 0, 3], [0, 2, 0]],
@@ -37,22 +28,6 @@ def checks(puzzle, a, b, c, d, num):
 
     return col_check and row_check and grid3x3_check
 
-sudoku_test = np.array(
-    [[[[5, 3, 4], [6, 7, 2], [1, 9, 8]],
-    [[6, 7, 8], [1, 9, 5], [2, 3, 0]],
-    [[0, 0, 0], [0, 0, 0], [0, 6, 0]]],
-    [[[8, 0, 0], [4, 0, 0], [7, 0, 0]],
-    [[0, 6, 0], [8, 0, 3], [0, 2, 0]],
-    [[0, 0, 3], [0, 0, 1], [0, 0, 6]]],
-    [[[0, 6, 0], [0, 0, 0], [0, 0, 0]],
-    [[0, 0, 0], [4, 1, 9], [0, 8, 0]],
-    [[2, 8, 0], [0, 0, 5], [0, 7, 9]]]]
-)
-
-# print(checks(sudoku_test,0,1,2,1,4))
-
-coords = [] #
-
 
 def get_next_empty(sudoku, a, b, c, d):
     check_flag = False
@@ -67,8 +42,6 @@ def get_next_empty(sudoku, a, b, c, d):
                         return [i, j, k, m]
     return False
 
-# print(get_next_empty(sudoku, 0, 0, 2, 0))
-
 prev = []
 
 def solve(sudoku, abcd):
@@ -78,12 +51,9 @@ def solve(sudoku, abcd):
         if abcd == prev[-1]:
             prev.pop()
             n = sudoku[a,b,c,d]
-    except IndexError:
+    except IndexError: # the if statement produces this error when prev is initialized
         pass
     if sudoku[a,b,c,d] and n == 0:
-        if not get_next_empty(sudoku, a, b, c, d):
-            print("Woah")
-            return
         return solve(sudoku, get_next_empty(sudoku, a, b, c, d))
     else:
         for i in range(n, 9):
