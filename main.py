@@ -4,17 +4,16 @@ import sys
 
 sys.setrecursionlimit(4000)
 
-sudoku = np.array(
-    [[[[5, 3, 0], [6, 0, 0], [0, 9, 8]],
-    [[0, 7, 0], [1, 9, 5], [0, 0, 0]],
-    [[0, 0, 0], [0, 0, 0], [0, 6, 0]]],
-    [[[8, 0, 0], [4, 0, 0], [7, 0, 0]],
-    [[0, 6, 0], [8, 0, 3], [0, 2, 0]],
-    [[0, 0, 3], [0, 0, 1], [0, 0, 6]]],
-    [[[0, 6, 0], [0, 0, 0], [0, 0, 0]],
-    [[0, 0, 0], [4, 1, 9], [0, 8, 0]],
-    [[2, 8, 0], [0, 0, 5], [0, 7, 9]]]]
-)
+sudoku = []
+
+with open('input.csv') as f:
+    data = csv.reader(f, delimiter=',')
+    for row in data:
+        row = [int(x) for x in row]
+        sudoku.append(row)
+
+sudoku = np.array(sudoku)
+sudoku = sudoku.reshape(3,3,3,3).transpose(0, 2, 1, 3) # allows for more intuitive data access
 
 def valid_set(arr, num):
     if num in arr:
@@ -60,12 +59,13 @@ def solve(sudoku, abcd):
             if checks(sudoku, a, b, c, d, i+1):
                 sudoku[a,b,c,d] = i+1
                 prev.append([a,b,c,d])
-                if get_next_empty(sudoku, a, b, c, d) != False:
-                    return solve(sudoku, get_next_empty(sudoku, a, b, c, d))
+                next_empty = get_next_empty(sudoku, a, b, c, d)
+                if next_empty != False:
+                    return solve(sudoku, next_empty)
                 else:
-                    with open('sudoku.csv', 'w') as f:
-                        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
-                        wr.writerow(sudoku.flatten())
+                    with open('solution.csv', 'w') as f:
+                        wr = csv.writer(f)
+                        wr.writerows(sudoku.transpose(0,2,1,3).reshape(9,9))
                     return
         sudoku[a,b,c,d] = 0
         return solve(sudoku, prev[-1])
