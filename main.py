@@ -1,8 +1,5 @@
 import numpy as np
 import csv
-import sys
-
-sys.setrecursionlimit(4000)
 
 sudoku = []
 
@@ -29,16 +26,11 @@ def checks(puzzle, a, b, c, d, num):
 
 
 def get_next_empty(sudoku, a, b, c, d):
-    check_flag = False
-    for i in range(3):
-        for j in range(3):
-            for k in range(3):
-                for m in range(3):
-                    if [i,j,k,m] == [a,b,c,d]:
-                        check_flag = True
-                        continue
-                    if not sudoku[i, j, k, m] and check_flag == True:
-                        return [i, j, k, m]
+    flat_coord = np.ravel_multi_index((a,b,c,d), sudoku.shape) + 1
+    while flat_coord < sudoku.size:
+        if sudoku.flatten()[flat_coord] == 0:
+            return np.unravel_index(flat_coord, sudoku.shape)
+        flat_coord += 1
     return False
 
 prev = []
