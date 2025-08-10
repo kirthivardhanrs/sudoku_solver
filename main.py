@@ -55,13 +55,13 @@ def solve(sudoku, abcd):
                 if next_empty != False:
                     return solve(sudoku, next_empty)
                 else:
-                    with open('solution.csv', 'w') as f:
+                    with open('input.csv', 'w') as f:
                         wr = csv.writer(f)
                         wr.writerows(sudoku.transpose(0,2,1,3).reshape(9,9))
                     return
         sudoku[a,b,c,d] = 0
         return solve(sudoku, prev[-1])
-        
+
 
 solve(sudoku, [0,0,0,0])
 
